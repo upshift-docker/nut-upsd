@@ -1,0 +1,30 @@
+#!/bin/sh -ex
+
+cat >/etc/nut/ups.conf <<EOF
+[$UPS_NAME]
+	desc = "$UPS_DESC"
+	driver = $UPS_DRIVER
+	port = $UPS_PORT
+EOF
+
+cat >/etc/nut/upsd.conf <<EOF
+LISTEN 0.0.0.0 3493
+EOF
+
+cat >/etc/nut/upsd.users <<EOF
+[$API_USER]
+	password = $API_PASSWORD
+	upsmon master
+EOF
+
+cat >/etc/nut/upsmon.conf <<EOF
+MONITOR $UPS_NAME@localhost 1 $API_USER $API_PASSWORD master
+SHUTDOWNCMD "$SHUTDOWN_CMD"
+EOF
+
+chgrp -R nut /etc/nut /dev/bus/usb
+chmod -R o-rwx /etc/nut
+
+/usr/sbin/upsdrvctl start
+/usr/sbin/upsd
+exec /usr/sbin/upsmon -D
