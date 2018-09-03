@@ -5,7 +5,7 @@ LABEL maintainer="laurent.paumier@fnac.net"
 ENV NUT_VERSION 2.7.4
 
 ENV UPS_NAME="ups"
-ENV UPS_DESC="Eaton 5SC 500"
+ENV UPS_DESC="UPS"
 ENV UPS_DRIVER="usbhid-ups"
 ENV UPS_PORT="auto"
 
