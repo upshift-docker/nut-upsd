@@ -1,6 +1,6 @@
-FROM alpine:3.8
+FROM alpine:3.9
 
-LABEL maintainer="laurent.paumier@fnac.net"
+LABEL maintainer="docker@upshift.fr"
 
 ENV NUT_VERSION 2.7.4
 
