@@ -24,6 +24,7 @@ RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
 		libusb-compat-dev \
 		build-base \
+		curl \
 	; \
 	# download and extract
 	cd /tmp; \
