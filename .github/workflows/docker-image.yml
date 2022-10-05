@@ -11,7 +11,7 @@ jobs:
         name: Docker Metadata action
         uses: docker/metadata-action@v3.3.0
         with:
-          images: upshift/nut-upsd
+          images: plasmatechnologies/nut-upsd
           flavor: |
             latest=${{ github.ref == 'refs/heads/master' }}
           tags: |
