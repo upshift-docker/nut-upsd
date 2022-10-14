@@ -1,0 +1,32 @@
+version: '2.4'
+services:
+    nut-upsd:
+        container_name: nut-upsd
+        hostname: nut-upsd
+        restart: unless-stopped
+        image: nulldevil/nut-upsd:latest
+        environment:
+            API_PASSWORD: "password"
+            SHUTDOWN_CMD: "/usr/bin/systemctl poweroff"
+            ENABLE_INFLUX: "true"
+            INFLUX_DBUSER: "user"
+            INFLUX_DBPASS: "influx_password"
+            INFLUX_HOST: "influx_host"
+            INFLUX_PORT: "8086"
+            INFLUX_DBNAME: "database"
+            INFLUX_DISPLAY_HOST: "your_hostname"
+            INFLUX_UPDATE_INTERVAL: "10"
+        devices:
+            - /dev/bus/usb/001/004:/dev/bus/usb/001/001
+        volumes:
+            - "/bin/systemctl:/bin/systemctl"
+            - "/run/systemd/system:/run/systemd/system"
+            - "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket"
+            - "/sys/fs/cgroup:/sys/fs/cgroup"
+        ports:
+            - "3493:3493"
+        privileged: true
+        security_opt:
+            - seccomp:unconfined
+        cap_add:
+            - SYS_ADMIN
