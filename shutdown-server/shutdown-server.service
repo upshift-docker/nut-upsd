@@ -1,0 +1,16 @@
+[Unit]
+Description=Shutdown Server daemon
+After=network.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+WorkingDirectory=/usr/local/bin
+ExecStart=/usr/local/bin/shutdown-server
+KillMode=process
+RestartSec=5s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

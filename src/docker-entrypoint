@@ -1,5 +1,14 @@
 #!/bin/sh -ex
 
+
+influx_loop() {
+   while true
+   do
+      /usr/local/bin/flux_mon
+      sleep 10
+   done
+}
+
 if [ -z "$API_PASSWORD" ]
 then
    API_PASSWORD=$(dd if=/dev/urandom bs=18 count=1 2>/dev/null | base64)
@@ -38,9 +47,15 @@ MONITOR $UPS_NAME@localhost 1 monitor $API_PASSWORD master
 SHUTDOWNCMD "$SHUTDOWN_CMD"
 EOF
 
-chgrp -R nut /etc/nut /dev/bus/usb
-chmod -R o-rwx /etc/nut
+#chgrp -R nut /etc/nut /dev/bus/usb
+#chmod -R o-rwx /etc/nut
 
 /usr/sbin/upsdrvctl start
 /usr/sbin/upsd
+
+if [ "$ENABLE_INFLUX" = "true" ]
+then
+   influx_loop&
+fi
+
 exec /usr/sbin/upsmon -D

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+TARGET="$1"
+
+ssh ${TARGET} "sudo systemctl stop shutdown-server"
+scp shutdown-server ${TARGET}:/tmp/
+ssh ${TARGET} "sudo mv /tmp/shutdown-server /usr/local/bin/shutdown-server"
+scp shutdown-server.service ${TARGET}:/tmp/
+ssh ${TARGET} "sudo mv /tmp/shutdown-server.service /etc/systemd/system/shutdown-server.service"
+scp shutdown-server.conf ${TARGET}:/tmp/
+ssh ${TARGET} "sudo mv /tmp/shutdown-server.conf /etc/"
+ssh ${TARGET} "sudo systemctl enable shutdown-server;sudo systemctl restart shutdown-server"
