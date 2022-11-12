@@ -2,7 +2,11 @@
 
 Docker image for Network UPS Tools server. Docker image have been remade using ubuntu 20.04 as the base, it links systemd inside container and enables shutdown functionality. Also there are some reporting to InfluxDB added. See docker compose for configuration.
 
+<<<<<<< HEAD
 NOTE! New shutdown function have been introduced, look at shutdown-server readme
+=======
+NOTE! shutdown function only tested on ubuntu 20.04 as host machine.
+>>>>>>> ddb1ae8e2dbd1ec5899433f850c5fcac268a01a8
 
 ## Usage
 
