@@ -1,10 +1,10 @@
 # Shutdown server, what is it ?
 
-What if you have multiple hosts connected to the UPS? And want them to safely shutdown?
+What if you have multiple hosts connected to the same UPS and want them to safely shutdown, when electricity goes down?
 
-The shutdown server runs on host and waits for api call either it's shutdown or shutdown cancel command, when the electricity fails, nut-upsd executes shutdown client with specified parameters
+The shutdown server runs on host (or many hosts) and waits for api call either it's shutdown or shutdown cancel command, when the electricity fails, nut-upsd daemon with call to these shutdown servers, via shutdown-client, another application that is already built in docker container.
 
-Remember to deploy this service to all hosts you are running
+**Remember to deploy shutdown-server to all hosts you are running on ups**
 
 # How to deploy ?
 
