@@ -22,8 +22,8 @@ func (hl *HostList) String() string {
 }
 
 func (ml *HostList) Set(s string) error {
-    *ml = strings.Split(s, ",")
-    return nil
+  *ml = strings.Split(s, ",")
+  return nil
 }
 
 func PostAction(host string) {
@@ -75,5 +75,5 @@ func main() {
     ShutdownHosts(hlist)
   } else {
     fmt.Printf("Unknown action provided, please use shutdown or cancel\n")
-  } 
+  }
 }

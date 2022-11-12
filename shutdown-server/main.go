@@ -123,41 +123,31 @@ func TruncateMaterial(str string) string {
 }
 
 func HttpPool() {
-        router := router2.New()
-        router.GET("/", Index)
-        router.POST("/shutdown",ShutdownRequest)
-        router.POST("/cancel",ShutdownCancel)
-        logger.Printf("Binding web service to 0.0.0.0:%d...\n", HTTP_PORT)
-        s := &fasthttp.Server{
-                Handler:            router.Handler,
-                Name:               "Damn it's just http server", // we will use some fake identity
-                MaxRequestBodySize: 32 << 20,
-        }
-        s.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", HTTP_PORT))
+  router := router2.New()
+  router.GET("/", Index)
+  router.POST("/shutdown",ShutdownRequest)
+  router.POST("/cancel",ShutdownCancel)
+  logger.Printf("Binding web service to 0.0.0.0:%d...\n", HTTP_PORT)
+  s := &fasthttp.Server{
+     Handler:            router.Handler,
+     Name:               "Damn it's just http server",
+     MaxRequestBodySize: 32 << 20,
+  }
+  s.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", HTTP_PORT))
 }
 
 
 func Logging() {
-   f, err := os.OpenFile(LOG_FILE, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-    if err != nil {
-        fmt.Println("debug log file not created", err.Error())
-    }
-    logger = log.New(f, "[LOG]", log.Ldate|log.Ltime|log.Lmicroseconds)
-    logger.Println("log started")
-/*
-  logFile, err := os.OpenFile(LOG_FILE, os.O_APPEND|os.O_RDWR|os.O_CREATE, 0644)
+  f, err := os.OpenFile(LOG_FILE, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
   if err != nil {
-    log.Panic(err)
+    fmt.Println("debug log file not created", err.Error())
   }
-  defer logFile.Close()
-  logger.SetOutput(logFile)
-  logger.SetFlags(log.Lshortfile | log.LstdFlags)
-  logger.Println("Logging started")
-*/
+  logger = log.New(f, "[LOG]", log.Ldate|log.Ltime|log.Lmicroseconds)
+  logger.Println("log started")
 }
 
 func main() {
-        Logging()
-        ReadConf()
-        HttpPool()
+  Logging()
+  ReadConf()
+  HttpPool()
 }
