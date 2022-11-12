@@ -2,11 +2,7 @@
 
 Docker image for Network UPS Tools server. Docker image have been remade using ubuntu 20.04 as the base, it links systemd inside container and enables shutdown functionality. Also there are some reporting to InfluxDB added. See docker compose for configuration.
 
-<<<<<<< HEAD
-NOTE! New shutdown function have been introduced, look at shutdown-server readme
-=======
-NOTE! shutdown function only tested on ubuntu 20.04 as host machine.
->>>>>>> ddb1ae8e2dbd1ec5899433f850c5fcac268a01a8
+**NOTE! New shutdown function have been introduced, look at shutdown-server readme**
 
 ## Usage
 
@@ -62,7 +58,7 @@ This is the password for the upsmon user.
 
 *Default value*: `echo 'System shutdown not configured!'`
 
-You should use: `/usr/bin/systemctl poweroff`
+You should use: `/usr/local/bin/shutdown-client -action shutdown -api_key abcd -hosts node1,node2,node3`
 
 This is the command upsmon will run when the system needs to be brought down. The command will be run from inside the container.
 

@@ -42,10 +42,8 @@ RUN apt-get update && apt-get install -y build-essential wget libusb-dev curl &&
 
 COPY src/docker-entrypoint /usr/local/bin/
 COPY src/flux_mon /usr/local/bin/
-<<<<<<< HEAD
 COPY shutdown-client/shutdown-client /usr/local/bin/
-=======
->>>>>>> ddb1ae8e2dbd1ec5899433f850c5fcac268a01a8
+
 ENTRYPOINT ["docker-entrypoint"]
 
 WORKDIR /var/run/nut
