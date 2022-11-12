@@ -1,0 +1,32 @@
+#!/bin/bash
+# (c) 2022 e1z0
+# bash shell ups script to gather statistics from nut-upsd running in docker container
+# see: https://github.com/e1z0/nut-upsd
+
+while true; do
+# Collect the stats
+STATS=$(upsc ups)
+
+#Gather Values for statistics
+LOADPERCENT=$(echo -e "$STATS" |grep ups.load | cat | awk '{print $2}')
+RUNTIME=$(echo -e "$STATS" |grep runtime: | cat | awk '{print $2}')
+UTILVOLT=$(echo -e "$STATS" |grep input.voltage: | cat | awk '{print $2}')
+OUTVOLT=$(echo -e "$STATS" |grep output.voltage: | cat | awk '{print $2}')
+BATTCAP=$(echo -e "$STATS" |grep battery.charge: | cat | awk '{print $2}')
+STATE=$(echo -e "$STATS" |grep ups.status: | cat | awk '{print $2}')
+RATING=$(echo -e "$STATS" |grep ups.realpower.nominal: | cat | awk '{print $2}')
+#LOADPERCENT=$(echo -e "$STATS" |grep ups.load | cat | awk '{print $2}')
+LOAD=$((${RATING}*${LOADPERCENT}/100))
+
+#Check State, 1 = Normal, 0 = Other
+if [ $STATE == "OL" ]; then
+	STATE="1"
+else
+	STATE="0"
+fi
+
+#Write out to InfluxDB
+/usr/bin/curl -s -i -XPOST -u ${INFLUX_DBUSER}:${INFLUX_DBPASS} "http://${INFLUX_HOST}:${INFLUX_PORT}/write?db=${INFLUX_DBNAME}" --data-binary  "power_status,host=${INFLUX_DISPLAY_HOST} success=0,load=$LOAD,runtime=$RUNTIME,utility_voltage=$UTILVOLT,output_voltage=$OUTVOLT,battery_capacity=$BATTCAP,power_state=$STATE,ups_rating=$RATING,load_percentage=$LOADPERCENT"  > /dev/null
+#Wait X seconds
+sleep ${INFLUX_UPDATE_INTERVAL}
+done
