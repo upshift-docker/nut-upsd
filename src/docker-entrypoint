@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -x
 
 if [ -z "$API_PASSWORD" ]
 then
@@ -15,10 +15,15 @@ cat >/etc/nut/ups.conf <<EOF
 	desc = "$UPS_DESC"
 	driver = $UPS_DRIVER
 	port = $UPS_PORT
+	usb_hid_rep_index = 1
+	usb_hid_desc_index = 1
+	debug_min = 4
+	pollonly = "enabled"
 EOF
 
 cat >/etc/nut/upsd.conf <<EOF
 LISTEN 0.0.0.0 3493
+MAXAGE 60
 EOF
 
 cat >/etc/nut/upsd.users <<EOF
@@ -36,6 +41,7 @@ EOF
 cat >/etc/nut/upsmon.conf <<EOF
 MONITOR $UPS_NAME@localhost 1 monitor $API_PASSWORD master
 SHUTDOWNCMD "$SHUTDOWN_CMD"
+DEADTIME 60
 EOF
 
 chgrp -R nut /etc/nut /dev/bus/usb
@@ -43,4 +49,6 @@ chmod -R o-rwx /etc/nut
 
 /usr/sbin/upsdrvctl start
 /usr/sbin/upsd
-exec /usr/sbin/upsmon -D
+# exec /usr/sbin/upsmon -DDDDD
+watch upsc ups@localhost
+# /bin/sh

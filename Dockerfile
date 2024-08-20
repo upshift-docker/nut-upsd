@@ -1,8 +1,4 @@
-FROM alpine:3.12
-
-LABEL maintainer="docker@upshift.fr"
-
-ENV NUT_VERSION 2.7.4
+FROM alpine:3.19.0
 
 ENV UPS_NAME="ups"
 ENV UPS_DESC="UPS"
@@ -18,19 +14,26 @@ RUN set -ex; \
 	# run dependencies
 	apk add --no-cache \
 		openssh-client \
-		libusb-compat \
+		libusb-dev \
+		git \
+		python3 \
+		perl \
+		autoconf \
+		libtool \
+		automake \
+		libltdl \
 	; \
 	# build dependencies
 	apk add --no-cache --virtual .build-deps \
-		libusb-compat-dev \
+		libusb-dev \
 		build-base \
 	; \
 	# download and extract
 	cd /tmp; \
-	wget http://www.networkupstools.org/source/2.7/nut-$NUT_VERSION.tar.gz; \
-	tar xfz nut-$NUT_VERSION.tar.gz; \
-	cd nut-$NUT_VERSION \
-	; \
+	git clone https://github.com/networkupstools/nut.git; \
+	cd nut; \
+	./autogen.sh; \
+	#; \
 	# build
 	./configure \
 		--prefix=/usr \
@@ -44,7 +47,7 @@ RUN set -ex; \
 		--with-drvpath=/usr/share/nut \
 		--with-statepath=/var/run/nut \
 		--with-user=nut \
-		--with-group=nut \
+		--with-group=nut\
 	; \
 	# install
 	make install \
@@ -56,7 +59,7 @@ RUN set -ex; \
 	install -d -m 750 -o nut -g nut /var/run/nut \
 	; \
 	# cleanup
-	rm -rf /tmp/nut-$NUT_VERSION.tar.gz /tmp/nut-$NUT_VERSION; \
+	rm -rf /tmp/nut; \
 	apk del .build-deps
 
 COPY src/docker-entrypoint /usr/local/bin/
